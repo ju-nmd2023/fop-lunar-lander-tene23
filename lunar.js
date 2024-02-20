@@ -104,13 +104,13 @@ function startButton() {
   strokeWeight(5);
   rect(230, 100, x, y);
   textSize(20);
-  text("Start Game", 278, 125);
+  text("Start Game", 255, 125);
 
   pop();
 }
 
 //Restart button
-function restart() {
+function restartButton() {
   push();
 
   let x = 150;
@@ -138,6 +138,23 @@ function youwin() {
   textSize(40);
   text("You Win", 200, 80);
 }
+
+//Start screen
+function startScreen() {
+  startButton();
+}
+
+//game screen
+function gameScreen() {
+  penguin(x, y);
+  if (keyIsDown(38)) {
+    velocity = velocity - 0.2;
+  }
+}
+//end screen
+function endScreen() {
+  restartButton();
+}
 //Add variable so things are happening when game is running, is true
 let gameIsRunning = true;
 let gameOver = false;
@@ -157,7 +174,7 @@ const acceleration = 0.05;
 function draw() {
   //draws objects
   scenery();
-  penguin(20, penguinY);
+  //penguin(20, penguinY);
   iceberg();
 
   //more icebergs
@@ -183,8 +200,14 @@ function draw() {
   pop();
 
   startButton();
-
-  restart();
+  //if screens
+  if (state === "start") {
+    startScreen();
+  } else if (state === "game") {
+    gameScreen();
+  } else if (state === "result") {
+    endScreen();
+  }
 
   gameover();
 
@@ -197,9 +220,9 @@ function draw() {
   - velocity = velocity - 0.2 since the acceleration 0.1 is too little
   */
 
-  if (keyIsDown(38)) {
+  /*if (keyIsDown(38)) {
     velocity = velocity - 0.2;
-  }
+  }*/
 
   if (gameIsRunning === true) {
     /*Giving movement to the penguin
@@ -238,3 +261,14 @@ function draw() {
     restart();
   }
 } //end of function draw
+
+//when start game is pressed, game will start
+function mousePressed() {
+  if (state === "start") {
+    state = "game";
+  } else if (state === "game") {
+    state = "result";
+  } else if (state === "result") {
+    state = "game";
+  }
+}
