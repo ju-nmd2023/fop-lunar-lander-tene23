@@ -238,5 +238,3 @@ function draw() {
     restart();
   }
 } //end of function draw
-
-//test
