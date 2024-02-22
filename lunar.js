@@ -282,7 +282,7 @@ function draw() {
   - Using an if statement*/
 
   //Stopping the penguin
-  /*if penguin y value is bigger than 10, the gam is no longer running
+  /*if penguin y value is bigger than 10, the game is no longer running
   console will show Game over*/
   if (penguinY > 10) {
     gameIsRunning = false;
