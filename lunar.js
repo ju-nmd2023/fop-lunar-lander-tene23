@@ -93,6 +93,7 @@ function penguin(x, y) {
 
   pop();
 }
+//----Buttons
 //start button
 function startButton() {
   push();
@@ -125,50 +126,83 @@ function restartButton() {
 
   pop();
 }
-
-function gameover() {
-  fill(212, 130, 36);
-  textSize(40);
-  text("Game Over", 200, 80);
-}
-
-function youwin() {
-  fill(212, 130, 36);
+//----End of buttons
+//----Text
+//Game name
+function gameName() {
+  fill(44, 92, 112);
 
   textSize(40);
-  text("You Win", 200, 80);
+  text("Penguin Landing", 150, 55);
 }
+//game over text
+function gameOverText() {
+  fill(212, 130, 36);
+  textSize(40);
+  text("Game Over", 240, 80);
+}
+//you win text
+function youWin() {
+  fill(212, 130, 36);
 
+  textSize(40);
+  text("You Win!", 205, 80);
+}
+//---End of text
+
+//----Screens
 //Start screen
 function startScreen() {
   startButton();
+  gameName();
+  fill(0);
+  textSize(20);
+  text("Use the upper arrow key ↑ to land the penguin safely", 90, 80);
 }
-
 //game screen
+/*//define a variable, this variable is the value for the penguins start y position
+let penguinY = -300;*/
+
 function gameScreen() {
-  penguin(x, y);
+  penguin(25, penguinY);
   if (keyIsDown(38)) {
     velocity = velocity - 0.2;
   }
 }
-//end screen
-function endScreen() {
+
+//win screen
+function winScreen() {
+  youWin();
   restartButton();
 }
-//Add variable so things are happening when game is running, is true
-let gameIsRunning = true;
-let gameOver = false;
 
+//lose screen
+function loseScreen() {
+  gameOverText();
+  restartButton();
+}
+
+//----End of all code for screens
+
+//---All the let variables
+
+//Add variable so things are happening when game is running, is true
+let gameIsRunning = false;
+let gameOver = false;
+//define a variable, this variable is the value for the penguins start y position
+let penguinY = -300;
 /*Step 3
   Add gravity to the penguin by using a variable for the y position of the penguin
   Add velocity and acceleration */
 
-//define a variable, this variable is the value for the penguins start y position
-let penguinY = -280;
 //Add velocity to mimic gravity
 let velocity = 0.9;
 //Add acceleration
-const acceleration = 0.05;
+let acceleration = 0.03;
+//we start at the start screen
+let state = "start";
+
+//----end of let variables
 
 //----Function draw
 function draw() {
@@ -199,20 +233,23 @@ function draw() {
   iceberg();
   pop();
 
-  startButton();
-  //if screens
+  //startButton();
+  //end of drawing scenery
+
+  /*---if screens, decide FROM where TO where, 
+  still inside function draw
   if (state === "start") {
     startScreen();
   } else if (state === "game") {
     gameScreen();
-  } else if (state === "result") {
-    endScreen();
+  } else if (state === "win") {
+    winScreen();
+  } else if (state === "lose") {
+    loseScreenScreen();
   }
-
-  gameover();
-
-  youwin();
-  //---If statements
+*/
+  //gameover();
+  //youwin();
 
   /*Step 4
   Make the penguin fly by clicking the mouse button
@@ -224,11 +261,15 @@ function draw() {
     velocity = velocity - 0.2;
   }*/
 
+  //---If statements
+  //---If game is running is true, penguin will move
   if (gameIsRunning === true) {
-    /*Giving movement to the penguin
-     */
+    //Giving movement to the penguin
     penguinY = penguinY + velocity;
     velocity = velocity + acceleration;
+    gameOver = false;
+
+    //startButton();
     //velocity= hastighet
     //acceleration= usual acceleration
   }
@@ -239,26 +280,49 @@ function draw() {
   How to do it:
   - Change the direction, form the pingpong animation
   - Using an if statement*/
+
+  //Stopping the penguin
   /*if penguin y value is bigger than 10, the gam is no longer running
   console will show Game over*/
-
   if (penguinY > 10) {
     gameIsRunning = false;
   }
-
+  //Losing the game
   if (penguinY > 10 && velocity > 2) {
     gameIsRunning = false;
     gameOver = true;
-    //console.log("Game Over");
-    restart();
+    //fill(212, 130, 36);
+    //textSize(40);
+    //text("Game Over :(", 200, 80);
+    gameOverText();
+    restartButton();
+    state = "lose";
   }
-
+  //Winning the game
   if (penguinY > 10 && velocity <= 2) {
     gameIsRunning = false;
     gameOver = false;
-    //console.log("You Win!!");
-    youwin();
-    restart();
+    //fill(212, 130, 36);
+    //textSize(40);
+    //text("You Win!", 200, 80);
+    youWin();
+    restartButton();
+    state = "win";
+  }
+
+  /*---if screens, decide FROM where TO where, 
+  still inside function draw*/
+  if (state === "start") {
+    startScreen();
+  } else if (state === "game") {
+    // penguinY = -300;
+    // velocity = 0.9;
+    // acceleration = 0.03;
+    gameScreen();
+  } else if (state === "win") {
+    winScreen();
+  } else if (state === "lose") {
+    loseScreen();
   }
 } //end of function draw
 
@@ -266,9 +330,23 @@ function draw() {
 function mousePressed() {
   if (state === "start") {
     state = "game";
+    gameIsRunning = true;
   } else if (state === "game") {
-    state = "result";
-  } else if (state === "result") {
-    state = "game";
+    state = "start";
+    gameIsRunning = false;
+  } else if (state === "win") {
+    console.log("click");
+    state = "start";
+    gameIsRunning = false;
+    penguinY = -300;
+    velocity = 0.9;
+    loop();
+  } else if (state === "lose") {
+    console.log("hello");
+    state = "start";
+    gameIsRunning = false;
+    penguinY = -300;
+    velocity = 0.9;
+    loop();
   }
 }
